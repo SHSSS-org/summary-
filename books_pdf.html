@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books PDF Library - SHSSS Headlines</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            color: #ff385c;
+            margin-left: 10px;
+        }
+        
+        .logo-icon {
+            color: #ff385c;
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #ff385c;
+        }
+        
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #ff385c 0%, #e61e4d 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .page-header h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .page-header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Search and Filter Section */
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 50px 0 0 50px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-bar button {
+            padding: 15px 25px;
+            background: #ff385c;
+            color: white;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .search-bar button:hover {
+            background: #e61e4d;
+        }
+        
+        .category-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-filter select {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+            min-width: 200px;
+        }
+        
+        /* Books Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .book-cover {
+            height: 200px;
+            background-color: #f0f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff385c;
+            font-size: 64px;
+            position: relative;
+        }
+        
+        .book-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff385c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .book-details {
+            padding: 20px;
+        }
+        
+        .book-details h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #ff385c;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: #e61e4d;
+        }
+        
+        /* No Results Message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            grid-column: 1 / -1;
+            display: none;
+        }
+        
+        .no-results i {
+            font-size: 64px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-results p {
+            font-size: 18px;
+            color: #777;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #ff385c;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #ccc;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: #ff385c;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            color: #ccc;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 5px 10px;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-bar {
+                min-width: 100%;
+            }
+            
+            .category-filter {
+                width: 100%;
+            }
+            
+            .category-filter select {
+                width: 100%;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-book logo-icon"></i>
+                    <h1>SHSSS Headlines</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#" class="active"><i class="fas fa-book"></i> Books PDF</a></li>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-user-graduate"></i> Students</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h2>Books PDF Library</h2>
+            <p>Access a wide collection of textbooks and study materials for your courses</p>
+        </section>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for books, authors, or subjects...">
+                <button id="search-button"><i class="fas fa-search"></i> Search</button>
+            </div>
+            
+            <div class="category-filter">
+                <label for="category-select">Filter by Category:</label>
+                <select id="category-select">
+                    <option value="all">All Categories</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="science">Science</option>
+                    <option value="literature">Literature</option>
+                    <option value="history">History</option>
+                    <option value="reference">Reference</option>
+                    <option value="physics">Physics</option>
+                    <option value="chemistry">Chemistry</option>
+                    <option value="biology">Biology</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Books Grid -->
+        <div class="books-grid" id="books-container">
+            <!-- Books will be dynamically inserted here -->
+        </div>
+        
+        <!-- No Results Message -->
+        <div class="no-results" id="no-results">
+            <i class="fas fa-search"></i>
+            <p>No books found matching your search criteria</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SHSSS Headlines</h3>
+                    <p>Your academic resource for boarding house students</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#">Home</a>
+                    <a href="#">Books PDF</a>
+                    <a href="#">Study Materials</a>
+                    <a href="#">Exam Updates</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-envelope"></i> contact@shsss-headlines.edu</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 SHSSS Headlines. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample book data
+        const books = [
+            {
+                title: "Advanced Mathematics",
+                category: "mathematics",
+                grade: "Grade 11-12",
+                format: "PDF",
+                pages: 350,
+                downloadLink: "#"
+            },
+            {
+                title: "Physics Principles",
+                category: "physics",
+                grade: "Grade 10",
+                format: "PDF",
+                pages: 280,
+                downloadLink: "#"
+            },
+            {
+                title: "World History",
+                category: "history",
+                grade: "Grade 9-10",
+                format: "PDF",
+                pages: 420,
+                downloadLink: "#"
+            },
+            {
+                title: "English Literature",
+                category: "literature",
+                grade: "Grade 11",
+                format: "PDF",
+                pages: 320,
+                downloadLink: "#"
+            },
+            {
+                title: "Chemistry Fundamentals",
+                category: "chemistry",
+                grade: "Grade 10",
+                format: "PDF",
+                pages: 300,
+                downloadLink: "#"
+            },
+            {
+                title: "Biology Concepts",
+                category: "biology",
+                grade: "Grade 11",
+                format: "PDF",
+                pages: 380,
+                downloadLink: "#"
+            },
+            {
+                title: "Algebra Essentials",
+                category: "mathematics",
+                grade: "Grade 9",
+                format: "PDF",
+                pages: 250,
+                downloadLink: "#"
+            },
+            {
+                title: "Classic Novels Collection",
+                category: "literature",
+                grade: "Grade 10-12",
+                format: "PDF",
+                pages: 500,
+                downloadLink: "#"
+            },
+            {
+                title: "Science Encyclopedia",
+                category: "reference",
+                grade: "All Grades",
+                format: "PDF",
+                pages: 600,
+                downloadLink: "#"
+            },
+            {
+                title: "Modern Physics",
+                category: "physics",
+                grade: "Grade 12",
+                format: "PDF",
+                pages: 400,
+                downloadLink: "#"
+            },
+            {
+                title: "Organic Chemistry",
+                category: "chemistry",
+                grade: "Grade 11-12",
+                format: "PDF",
+                pages: 450,
+                downloadLink: "#"
+            },
+            {
+                title: "Calculus Made Easy",
+                category: "mathematics",
+                grade: "Grade 12",
+                format: "PDF",
+                pages: 320,
+                downloadLink: "#"
+            }
+        ];
+
+        // DOM elements
+        const booksContainer = document.getElementById('books-container');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const categorySelect = document.getElementById('category-select');
+        const noResults = document.getElementById('no-results');
+
+        // Display books function
+        function displayBooks(booksToDisplay) {
+            booksContainer.innerHTML = '';
+            
+            if (booksToDisplay.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            booksToDisplay.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <i class="fas fa-book"></i>
+                        <span class="book-category">${book.category}</span>
+                    </div>
+                    <div class="book-details">
+                        <h3>${book.title}</h3>
+                        <div class="book-meta">
+                            <span>${book.grade}</span>
+                            <span>${book.pages} pages</span>
+                        </div>
+                        <a href="${book.downloadLink}" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                    </div>
+                `;
+                booksContainer.appendChild(bookCard);
+            });
+        }
+
+        // Filter books based on search and category
+        function filterBooks() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const category = categorySelect.value;
+            
+            const filteredBooks = books.filter(book => {
+                const matchesSearch = book.title.toLowerCase().includes(searchTerm) || 
+                                    book.grade.toLowerCase().includes(searchTerm) ||
+                                    book.category.toLowerCase().includes(searchTerm);
+                const matchesCategory = category === 'all' || book.category === category;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            displayBooks(filteredBooks);
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', filterBooks);
+        searchButton.addEventListener('click', filterBooks);
+        categorySelect.addEventListener('change', filterBooks);
+
+        // Initialize the page with all books
+        displayBooks(books);
+        
+        // Download button functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('download-btn') || 
+                e.target.parentElement.classList.contains('download-btn')) {
+                e.preventDefault();
+                const bookTitle = e.target.closest('.book-card').querySelector('h3').textContent;
+                alert(`Downloading: ${bookTitle}\n\nIn a real implementation, this would redirect to the actual PDF file.`);
+            }
+        });
+    </script>
+</body>
+</html>
